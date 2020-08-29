@@ -26,7 +26,7 @@ www        IN CNAME  example.com.
 On my network provider - UPC I have to:
 
 - disable ipv6
-- forward port 80, 443, 6443 to my raspberrypi ip
+- forward port 80, 443, 6443 to raspberrypi ip
 - make smaller DHCP range to prevent conflicts in kubernetes
 
 ## Installation
