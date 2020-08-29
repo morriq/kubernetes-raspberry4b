@@ -5,9 +5,9 @@ Home cluster based on kubespray with github actions deployment.
 
 ### Hardware
 
-- [Raspberry pi 4b 8gb][https://www.raspberrypi.org/products/raspberry-pi-4-model-b/]
+- [Raspberry pi 4b 8gb](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/)
 - SD Card. I used 32gb
-- Cooler. I used [this one][https://www.amazon.com/Raspberry-Model-Aluminum-Cooling-Metal/dp/B07VQLBSNC]
+- Cooler. I used [this one](https://www.amazon.com/Raspberry-Model-Aluminum-Cooling-Metal/dp/B07VQLBSNC)
 - Ethernet connection
 
 ### Domain
