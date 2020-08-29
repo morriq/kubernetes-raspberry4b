@@ -44,9 +44,9 @@ apt install python3-pip git vim curl -y
 ssh-keygen
 
 # login and change password
-ssh ubuntu@192.168.0.231
+ssh ubuntu@{RASPBERRY PI IP}
 # upload public key
-ssh-copy-id ubuntu@192.168.0.231
+ssh-copy-id ubuntu@{RASPBERRY PI IP}
 
 Prepare Raspbeeri
 #### --------------------------------------------------------
@@ -81,6 +81,9 @@ vim roles/bootstrap-os/tasks/bootstrap-debian.yml
 >>>>     DEBIAN_FRONTEND=noninteractive apt-get install -y python3-minimal
 inventory/mycluster/hosts.yaml
 >>> ansible_user: ubuntu
+vim inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
+find and modify line with "supplementary_addresses_in_ssl_keys":
+>>>> supplementary_addresses_in_ssl_keys: ["example.com"]
 # The installation process
 ansible-playbook -i inventory/mycluster/hosts.yaml  --become --become-user=root cluster.yml \
 -e "ansible_distribution_release=bionic kube_resolv_conf=/run/systemd/resolve/resolv.conf local_path_provisioner_enabled=true"
@@ -133,5 +136,6 @@ tar -zxvf helm-v3.2.1-linux-amd64.tar.gz
 mv linux-amd64/helm /usr/local/bin/helm
 # install ingress we must set image ARM64
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm install ingress ingress-nginx/ingress-nginx
+helm install ingress ingress-nginx/ingress-nginx --set "controller.extraArgs.enable-ssl-passthrough=" -n ingress
+
 ```
