@@ -14,7 +14,12 @@ Home cluster based on kubespray with github actions deployment.
 
 - forward domain to your public IP (I'll call it example.com).
 
-- handle subdomains .
+- add additional configuration to handle subdomains and www:
+
+```
+*          IN CNAME  example.com.
+www        IN CNAME  example.com.
+```
 
 ### Network
 
