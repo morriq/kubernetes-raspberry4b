@@ -2,14 +2,14 @@
 Home cluster based on kubespray with github actions deployment.
 
 Content:
-- [Pre requirements](#pre requirements)
+- [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
     - [Domain](#domain)
     - [Network](#network)
 - [Installation](#installation)
     - [Kubernetes](#kubernetes)
     - [https](#https)
-    - [github actions deployment](#github actions deployment)
+    - [github actions deployment](#github-actions-deployment)
 
 ## Pre requirements
 
