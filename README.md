@@ -29,3 +29,7 @@ On my network provider - UPC I have to:
 - forward port 80, 443, 6443 to my raspberrypi ip
 - make smaller DHCP range to prevent conflicts in kubernetes
 
+## Installation
+
+- Install on sd card ubuntu 20.04 64bit via https://www.raspberrypi.org/blog/raspberry-pi-imager-imaging-utility/
+- 
