@@ -4,6 +4,7 @@ Home cluster based on kubespray with github actions deployment.
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
+    - [Software](#software)
     - [Domain](#domain)
     - [Network](#network)
 - [Installation](#installation)
@@ -16,9 +17,13 @@ Content:
 ### Hardware
 
 - [Raspberry pi 4b 8gb](https://www.raspberrypi.org/products/raspberry-pi-4-model-b/)
-- SD Card. I used 32gb
+- SD Card. I used 32gb with installed ubuntu 20.04 64bit (https://www.raspberrypi.org/blog/raspberry-pi-imager-imaging-utility/)
 - Cooler. I used [this one](https://www.amazon.com/Raspberry-Model-Aluminum-Cooling-Metal/dp/B07VQLBSNC)
 - Ethernet connection
+
+### Software
+
+- Docker on your computer
 
 ### Domain
 
@@ -41,12 +46,9 @@ On my network provider - UPC I have to:
 
 ## Installation
 
-- Install on sd card ubuntu 20.04 64bit via https://www.raspberrypi.org/blog/raspberry-pi-imager-imaging-utility/
-- Insert sd card to raspberry and connect it to internet
-- Make sure your computer has docker
-- I used this video  https://www.youtube.com/watch?v=8fYtvRazzpo with https://github.com/netdevopsx/youtube/blob/master/kubernetes_raspberrypi.txt but with some changes to make it work as I want. All commands are executed mostly in docker environment:
-
 ### Kubernetes
+
+I used this video  https://www.youtube.com/watch?v=8fYtvRazzpo with https://github.com/netdevopsx/youtube/blob/master/kubernetes_raspberrypi.txt but with some changes to make it work as I want. All commands are executed mostly in docker environment:
 
 ```
 # Prepare docker:
