@@ -32,4 +32,6 @@ On my network provider - UPC I have to:
 ## Installation
 
 - Install on sd card ubuntu 20.04 64bit via https://www.raspberrypi.org/blog/raspberry-pi-imager-imaging-utility/
-- 
+- Insert sd card to raspberry and connect it to internet
+
+
