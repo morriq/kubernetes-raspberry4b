@@ -1,6 +1,16 @@
 # kubernetes-raspberry4b
 Home cluster based on kubespray with github actions deployment.
 
+Content:
+- [Pre requirements](#pre requirements)
+    - [Hardware](#hardware)
+    - [Domain](#domain)
+    - [Network](#network)
+- [Installation](#installation)
+    - [Kubernetes](#kubernetes)
+    - [https](#https)
+    - [github actions deployment](#github actions deployment)
+
 ## Pre requirements
 
 ### Hardware
@@ -35,6 +45,8 @@ On my network provider - UPC I have to:
 - Insert sd card to raspberry and connect it to internet
 - Make sure your computer has docker
 - I used this video  https://www.youtube.com/watch?v=8fYtvRazzpo with https://github.com/netdevopsx/youtube/blob/master/kubernetes_raspberrypi.txt but with some changes to make it work as I want. All commands are executed mostly in docker environment:
+
+### Kubernetes
 
 ```
 # Prepare docker:
@@ -141,3 +153,12 @@ helm install ingress ingress-nginx/ingress-nginx --set "controller.extraArgs.ena
 ```
 
 After that you should be able get nginx 404 response from your server. Just: `curl -I example.com`
+
+### https
+
+
+- [ ] describe https
+
+### github actions deployment
+
+- [ ] describe github actions deployment
