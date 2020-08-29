@@ -139,3 +139,5 @@ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 helm install ingress ingress-nginx/ingress-nginx --set "controller.extraArgs.enable-ssl-passthrough=" -n ingress
 
 ```
+
+After that you should be able get nginx 404 response from your server. Just: `curl -I example.com`
