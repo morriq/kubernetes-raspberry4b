@@ -235,8 +235,9 @@ Get secret and copy it to your repository in settings/secrets value of `KUBECONF
 
 `kubectl get secret <service-account-secret-name> -n <namespace> -o yaml`
 
-Test your github action by adding manifets/sample.yaml with content:
+Test your github action by adding manifets/sample.yaml with pod or deployment:
 
+### Pod
 
 ```
 kind: Pod
@@ -297,4 +298,73 @@ spec:
           backend:
             serviceName: hello-service
             servicePort: 80
+```
+
+### Deployment
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt"
+spec:
+  tls:
+  - hosts:
+    - www.example.com
+    - example.com
+    - test.example.com
+    - www.test.example.com
+    secretName: example-tls
+  rules:
+  - host: example.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: hello-kubernetes
+            servicePort: 80
+  - host: test.example.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: hello-kubernetes
+            servicePort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes
+spec:
+  ports:
+  - port: 80
+  #type: ClusterIP
+  selector:
+    app: hello-kubernetes
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes
+    spec:
+      containers:
+      - name: hello-kubernetes
+        image: hypriot/rpi-busybox-httpd
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
 ```
