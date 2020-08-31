@@ -163,4 +163,74 @@ After that you should be able get nginx 404 response from your server. Just: `cu
 
 ### github actions deployment
 
-- [ ] describe github actions deployment
+Create service account in kubernetes. It will be used in github:
+
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: github-deployment
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: github-deployment
+rules:
+- apiGroups: ["extensions"] # "" indicates the core API group
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["services", "deployments", "pods"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: test
+subjects:
+- kind: ServiceAccount
+  name: github
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: github-deployment
+  apiGroup: rbac.authorization.k8s.io
+```
+
+Add this to your repository in .github/workflows/deploy.yml:
+
+```
+name: CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Kubernetes set context
+      uses: Azure/k8s-set-context@v1
+      with:
+        method: service-account
+        k8s-url: https://example.com:6443
+        k8s-secret: ${{ secrets.KUBECONFIG }}
+
+    - uses: Azure/k8s-deploy@v1
+      with:
+        manifests: |
+          manifets/sample.yaml
+```
+
+Get service account secrent name:
+
+`kubectl get serviceAccounts github-deployment -o 'jsonpath={.secrets[*].name}'`
+
+Get secret and copy it to your repository in settings/secrets value of `KUBECONFIG`
+
+`kubectl get secret <service-account-secret-name> -n <namespace> -o yaml`
