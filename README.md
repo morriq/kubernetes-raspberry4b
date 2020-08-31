@@ -1,5 +1,5 @@
 # kubernetes-raspberry4b
-Https Home cluster based on kubespray with github actions deployment.
+Https home cluster based on kubespray with github actions deployment.
 
 Content:
 - [Pre requirements](#pre-requirements)
