@@ -166,7 +166,7 @@ After that you should be able get nginx 404 response from your server. Just: `cu
 
 Create service account in kubernetes. It will be used in github:
 
-```
+```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -240,7 +240,7 @@ Test your github action by adding manifets/sample.yaml with pod **or** deploymen
 
 ### Pod
 
-```
+```yaml
 kind: Pod
 apiVersion: v1
 metadata:
@@ -303,7 +303,7 @@ spec:
 
 ### Deployment
 
-```
+```yaml
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
