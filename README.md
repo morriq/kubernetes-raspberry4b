@@ -235,7 +235,7 @@ Get secret and copy it to your repository in settings/secrets value of `KUBECONF
 
 `kubectl get secret <service-account-secret-name> -n <namespace> -o yaml`
 
-Test your github action by adding manifets/sample.yaml with pod or deployment:
+Test your github action by adding manifets/sample.yaml with pod **or** deployment:
 
 ### Pod
 
