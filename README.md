@@ -1,6 +1,9 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
+- [ ] describe https
+- [ ] use namespace example-com in service account github-deployment and so on
+
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
@@ -158,8 +161,6 @@ After that you should be able get nginx 404 response from your server. Just: `cu
 
 ### https
 
-
-- [ ] describe https
 
 ### github actions deployment
 
