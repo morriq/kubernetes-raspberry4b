@@ -234,3 +234,67 @@ Get service account secrent name:
 Get secret and copy it to your repository in settings/secrets value of `KUBECONFIG`
 
 `kubectl get secret <service-account-secret-name> -n <namespace> -o yaml`
+
+Test your github action by adding manifets/sample.yaml with content:
+
+
+```
+kind: Pod
+apiVersion: v1
+metadata:
+  name: hello-app
+  labels:
+    app: hello
+spec:
+  containers:
+    - name: hello-app
+      image: hypriot/rpi-busybox-httpd
+      env:
+      - name: PORT
+        value: "80"
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-service
+spec:
+  selector:
+    app: hello
+  ports:
+    - port: 80 # Default port for image
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    cert-manager.io/issuer: "letsencrypt"
+spec:
+  tls:
+  - hosts:
+    - www.example.com
+    - example.com
+    - test.example.com
+    - www.test.example.com
+    secretName: example-tls
+  rules:
+  - host: example.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: hello-service
+            servicePort: 80
+  - host: test.example.com
+    http:
+      paths:
+        - path: /
+          backend:
+            serviceName: hello-service
+            servicePort: 80
+```
