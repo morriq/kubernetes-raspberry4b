@@ -93,7 +93,7 @@ declare -a IPS=(192.168.0.233)
 CONFIG_FILE=inventory/mycluster/hosts.yaml python3 contrib/inventory_builder/inventory.py ${IPS[@]}
 vim roles/bootstrap-os/tasks/bootstrap-debian.yml
 >>>>     DEBIAN_FRONTEND=noninteractive apt-get install -y python3-minimal
-inventory/mycluster/hosts.yaml
+vim inventory/mycluster/hosts.yaml
 >>> ansible_user: ubuntu
 vim inventory/mycluster/group_vars/k8s-cluster/k8s-cluster.yml
 find and modify line with "supplementary_addresses_in_ssl_keys":
