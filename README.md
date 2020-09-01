@@ -163,12 +163,17 @@ After that you should be able get nginx 404 response from your server. Just: `cu
 I used cert-manager for kubernetes. It's great tool with many solutions to serve https. 
 We basically want to free https, such as letsencrypt. To do it we use https://cert-manager.io/docs/configuration/acme/ with dns01 challange provider.
 
+run: `kubectl create namespace <YOURNAMESPACE>`
+
+
 If you have domain in ovh then you can follow [this tutorial](https://github.com/morriq/cert-manager-webhook-ovh#ovh-webhook-for-cert-manager). 
 
 If no then you should pick one on bottom of https://cert-manager.io/docs/configuration/acme/dns01/. Alternatively you can use [generic webhook resolver](https://cert-manager.io/docs/configuration/acme/dns01/webhook/)
 
 
 ### github actions deployment
+
+We're going to use <NAMESPACE> created in #https section.
 
 Create service account in kubernetes. It will be used in github:
 
@@ -177,27 +182,33 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: github-deployment
+  namespace: <NAMESPACE>
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  namespace: default
+  namespace: <NAMESPACE>
   name: github-deployment
 rules:
 - apiGroups: ["extensions"] # "" indicates the core API group
   resources: ["ingresses"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+- apiGroups: ["apps"] # "" indicates the core API group
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 - apiGroups: [""] # "" indicates the core API group
-  resources: ["services", "deployments", "pods"]
+  resources: ["services", "pods"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: test
+  namespace: <NAMESPACE>
+  name: github-deployment
 subjects:
 - kind: ServiceAccount
   name: github-deployment
+  namespace: <NAMESPACE>
 roleRef:
   kind: ClusterRole
   name: github-deployment
@@ -229,6 +240,7 @@ jobs:
 
     - uses: Azure/k8s-deploy@v1
       with:
+        namespace: <NAMESPACE>
         manifests: |
           manifets/sample.yaml
 ```
