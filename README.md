@@ -1,7 +1,6 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
-- [ ] describe https
 - [ ] use namespace example-com in service account github-deployment and so on
 
 Content:
@@ -160,6 +159,11 @@ helm install ingress ingress-nginx/ingress-nginx --set "controller.extraArgs.ena
 After that you should be able get nginx 404 response from your server. Just: `curl -I example.com`
 
 ### https
+
+I used cert-manager for kubernetes. It's great tool with many solutions to serve https. 
+We basically want to free https, such as letsencrypt. To do it we use https://cert-manager.io/docs/configuration/acme/ with dns01 challange provider.
+
+If you have domain in ovh then you can follow [this tutorial](https://github.com/morriq/cert-manager-webhook-ovh#ovh-webhook-for-cert-manager). If no then you should pick one on bottom of https://cert-manager.io/docs/configuration/acme/dns01/. Alternatively you can use [generic webhook resolver](https://cert-manager.io/docs/configuration/acme/dns01/webhook/)
 
 
 ### github actions deployment
