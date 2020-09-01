@@ -197,8 +197,7 @@ metadata:
   name: test
 subjects:
 - kind: ServiceAccount
-  name: github
-  namespace: default
+  name: github-deployment
 roleRef:
   kind: ClusterRole
   name: github-deployment
