@@ -173,7 +173,7 @@ If no then you should pick one on bottom of https://cert-manager.io/docs/configu
 
 ### github actions deployment
 
-We're going to use <NAMESPACE> created in #https section.
+We're going to use `<NAMESPACE>` created in #https section.
 
 Create service account in kubernetes. It will be used in github:
 
