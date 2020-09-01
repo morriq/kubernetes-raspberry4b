@@ -161,6 +161,8 @@ After that you should be able get nginx 404 response from your server. Just: `cu
 I used cert-manager for kubernetes. It's great tool with many solutions to serve https. 
 We basically want to free https, such as letsencrypt. To do it we use https://cert-manager.io/docs/configuration/acme/ with dns01 challange provider.
 
+I used YOURNAMESPACE as my domain
+
 run: `kubectl create namespace <YOURNAMESPACE>`
 
 
