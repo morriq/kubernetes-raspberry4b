@@ -150,7 +150,7 @@ tar -zxvf helm-v3.2.1-linux-amd64.tar.gz
 mv linux-amd64/helm /usr/local/bin/helm
 # install ingress we must set image ARM64
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm install ingress ingress-nginx/ingress-nginx --set "controller.extraArgs.enable-ssl-passthrough=" -n ingress
+helm install ingress ingress-nginx/ingress-nginx --set "controller.extraArgs.enable-ssl-passthrough=" -n nginx
 
 ```
 
