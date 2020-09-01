@@ -1,8 +1,6 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
-- [ ] use namespace example-com in service account github-deployment and so on
-
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
