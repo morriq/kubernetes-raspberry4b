@@ -245,7 +245,7 @@ jobs:
 
 Get service account secrent name:
 
-`kubectl get serviceAccounts github-deployment -o 'jsonpath={.secrets[*].name}'`
+`kubectl get serviceAccounts github-deployment -o 'jsonpath={.secrets[*].name}' -n <namespace>`
 
 Get secret and copy it to your repository in settings/secrets value of `KUBECONFIG`
 
