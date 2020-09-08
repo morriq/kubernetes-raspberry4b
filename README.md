@@ -11,6 +11,7 @@ Content:
     - [Kubernetes](#kubernetes)
     - [https](#https)
     - [github actions deployment](#github-actions-deployment)
+    - [github packages](#github-packages)
 
 ## Pre requirements
 
@@ -385,4 +386,88 @@ spec:
         env:
         - name: PORT
           value: "80"
+```
+
+## github packages
+
+I use github packages to create docker image and push it to github registry. Next this image is deployed on kubernetes.
+
+My k8s deployment:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello-kubernetes
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: readme-deployment
+          image: docker.pkg.github.com/<organisation>/<repository name>/<image name>:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: HOST
+              value: '0.0.0.0:80'
+
+```
+
+firstly create github token with access to `read:packages` and add secret in `<NAMESPACE>` where you have pod/deployment with used image.
+
+
+`kubectl create secret docker-registry ghcr --docker-server=docker.pkg.github.com --docker-username=USERNAME --docker-password=PASSWORD --docker-email=EMAIL -n NAMESPACE`
+
+Last part is to create build image and push it to github repository. Sample with github actions:
+
+```
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: whoan/docker-build-with-cache-action@v5
+        with:
+          username: USERNAME
+          password: '${{ secrets.GITHUB_TOKEN }}'
+          registry: docker.pkg.github.com
+          image_name: ORGANISATION/REPOSITORY/IMAGE NAME
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: publish
+    timeout-minutes: 4
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Kubernetes set context
+        uses: Azure/k8s-set-context@v1
+        with:
+          method: service-account
+          k8s-url: https://example.com:6443
+          k8s-secret: ${{ secrets.KUBECONFIG }}
+
+      - uses: Azure/k8s-deploy@v1
+        with:
+          namespace: NAMESPACE
+          manifests: |
+            k8s.yaml
 ```
