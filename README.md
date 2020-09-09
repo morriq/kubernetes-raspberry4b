@@ -414,6 +414,7 @@ spec:
       containers:
         - name: readme-deployment
           image: docker.pkg.github.com/<organisation>/<repository name>/<image name>:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           env:
