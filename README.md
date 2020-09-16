@@ -1,7 +1,6 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
-- [ ] describe rust
 - [ ] modify k8s.yaml to use docker image with commited hash - kubernetest that way will know when to pull new image
 
 Content:
@@ -481,3 +480,92 @@ jobs:
 ## Development
 
 ### Rust
+
+to compile rust for raspberyy pi on ubuntu 64bit I had to add `.cargo/config` with value:
+
+```
+[target.aarch64-unknown-linux-gnu]
+linker = "aarch64-linux-gnu-gcc"
+rustflags = [ "-C", "target-feature=+crt-static", "-C", "link-arg=-lgcc" ]
+```
+
+next Dockerfile
+
+```
+FROM rust:1.46 AS builder
+
+WORKDIR /usr/src/PROJECT
+
+RUN cargo install cargo-watch systemfd
+
+RUN apt-get update
+RUN apt-get install -y gcc-aarch64-linux-gnu
+
+RUN rustup target add aarch64-unknown-linux-gnu
+
+RUN mkdir src && touch src/lib.rs
+COPY Cargo.lock .
+COPY Cargo.toml .
+COPY .cargo .cargo
+
+RUN cargo build --target aarch64-unknown-linux-gnu --release
+
+ADD . .
+RUN cargo build --target aarch64-unknown-linux-gnu --release
+
+FROM arm64v8/debian:buster-slim
+COPY --from=builder \
+    /usr/src/PROJECT/target/aarch64-unknown-linux-gnu/release/PROJECT \
+    /usr/local/bin/PROJECT
+CMD ["PROJECT"]
+```
+
+and for local development I created `docker-compose.yaml`:
+
+```
+version: '3.4'
+services:
+  readme:
+    command: systemfd --no-pid -s http::0.0.0.0:3000 -- cargo watch -x run
+    ports:
+      - '3000:3000'
+    environment:
+      - HOST=0.0.0.0:3000
+    build:
+      context: .
+      target: builder
+    volumes:
+      - ./:/usr/src/readme
+```
+
+With such configuration I could easily deploy this `main.rs`:
+
+```rs
+use actix_web::{get, web, App, HttpServer, Responder};
+use listenfd::ListenFd;
+use std::env;
+
+mod graphic;
+
+#[get("/{id}/{name}/index.html")]
+async fn index(web::Path((id, name)): web::Path<(u32, String)>) -> impl Responder {
+    format!("Hello {}! id:{}", name, id)
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    println!("Hello World!");
+
+    let mut listenfd = ListenFd::from_env();
+    let mut server = HttpServer::new(|| App::new().service(index));
+    let host = env::var("HOST").expect("HOST avaiable must be set");
+
+    server = if let Some(l) = listenfd.take_tcp_listener(0).unwrap() {
+        server.listen(l)?
+    } else {
+        server.bind(host)?
+    };
+
+    server.run().await
+}
+```
