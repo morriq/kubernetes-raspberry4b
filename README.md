@@ -1,8 +1,6 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
-- [ ] modify k8s.yaml to use docker image with commited hash - kubernetest that way will know when to pull new image
-
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
@@ -417,7 +415,7 @@ spec:
         - name: ghcr
       containers:
         - name: readme-deployment
-          image: docker.pkg.github.com/<organisation>/<repository name>/<image name>:latest
+          image: ${DOCKER_IMAGE}
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -450,6 +448,7 @@ jobs:
 
       - uses: whoan/docker-build-with-cache-action@v5
         with:
+          image_tag: latest,commit-${{ github.sha }}
           username: USERNAME
           password: '${{ secrets.GITHUB_TOKEN }}'
           registry: docker.pkg.github.com
@@ -463,6 +462,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Resolve environment variables in k8s.yaml
+        env:
+          DOCKER_IMAGE: docker.pkg.github.com/dawid-winiarczyk/morriq-dev/readme:commit-${{ github.sha }}
+        run: |
+          envsubst < k8s.yaml > _k8s.yaml
+          
       - name: Kubernetes set context
         uses: Azure/k8s-set-context@v1
         with:
@@ -474,7 +479,7 @@ jobs:
         with:
           namespace: NAMESPACE
           manifests: |
-            k8s.yaml
+            _k8s.yaml
 ```
 
 ## Development
