@@ -1,6 +1,9 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
+- [ ] describe rust
+- [ ] modify k8s.yaml to use docker image with commited hash - kubernetest that way will know when to pull new image
+
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
