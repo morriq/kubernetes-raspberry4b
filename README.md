@@ -55,7 +55,7 @@ On my network provider - UPC I have to:
 
 I used this video  https://www.youtube.com/watch?v=8fYtvRazzpo with https://github.com/netdevopsx/youtube/blob/master/kubernetes_raspberrypi.txt but with some changes to make it work as I want. All commands are executed mostly in docker environment:
 
-```
+```sh
 # Prepare docker:
 docker run -it ubuntu:20.04 bash
 apt-get update -y && apt-get --with-new-pkgs upgrade -y
@@ -491,7 +491,7 @@ rustflags = [ "-C", "target-feature=+crt-static", "-C", "link-arg=-lgcc" ]
 
 next Dockerfile
 
-```
+```dockerfile
 FROM rust:1.46 AS builder
 
 WORKDIR /usr/src/PROJECT
@@ -540,7 +540,7 @@ services:
 
 With such configuration I could easily deploy this `main.rs`:
 
-```rs
+```rust
 use actix_web::{get, web, App, HttpServer, Responder};
 use listenfd::ListenFd;
 use std::env;
