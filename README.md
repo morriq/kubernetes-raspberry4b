@@ -464,7 +464,7 @@ jobs:
 
       - name: Resolve environment variables in k8s.yaml
         env:
-          DOCKER_IMAGE: docker.pkg.github.com/dawid-winiarczyk/morriq-dev/readme:commit-${{ github.sha }}
+          DOCKER_IMAGE: docker.pkg.github.com/<organisation>/<repository name>/<image name>:commit-${{ github.sha }}
         run: |
           envsubst < k8s.yaml > _k8s.yaml
           
