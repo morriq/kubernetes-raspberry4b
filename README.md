@@ -12,6 +12,8 @@ Content:
     - [https](#https)
     - [github actions deployment](#github-actions-deployment)
     - [github packages](#github-packages)
+- [Development](#development)
+    - [rust](#rust)
 
 ## Pre requirements
 
@@ -472,3 +474,7 @@ jobs:
           manifests: |
             k8s.yaml
 ```
+
+## Development
+
+### Rust
