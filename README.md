@@ -1,6 +1,8 @@
 # kubernetes-raspberry4b
 Https home cluster based on kubespray with github actions deployment.
 
+- [ ] elasticsearch on kubernetes
+
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
