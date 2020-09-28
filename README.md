@@ -430,7 +430,7 @@ spec:
 firstly create github token with access to `read:packages` and add secret in `<NAMESPACE>` where you have pod/deployment with used image.
 
 
-`kubectl create secret docker-registry ghcr --docker-server=docker.pkg.github.com --docker-username=USERNAME --docker-password=PASSWORD --docker-email=EMAIL -n NAMESPACE`
+`kubectl create secret docker-registry ghcr --docker-server=ghcr.io --docker-username=USERNAME --docker-password=PASSWORD --docker-email=EMAIL -n NAMESPACE`
 
 Last part is to create build image and push it to github repository. Sample with github actions:
 
