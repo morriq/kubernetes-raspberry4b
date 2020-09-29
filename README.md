@@ -452,8 +452,8 @@ jobs:
         with:
           image_tag: latest,commit-${{ github.sha }}
           username: USERNAME
-          password: '${{ secrets.GITHUB_TOKEN }}'
-          registry: docker.pkg.github.com
+          password: '${{ secrets.GHCR_TOKEN }}'
+          registry: ghcr.io
           image_name: ORGANISATION/REPOSITORY/IMAGE NAME
 
   deploy:
@@ -466,7 +466,7 @@ jobs:
 
       - name: Resolve environment variables in k8s.yaml
         env:
-          DOCKER_IMAGE: docker.pkg.github.com/<organisation>/<repository name>/<image name>:commit-${{ github.sha }}
+          DOCKER_IMAGE: ghcr.io/<organisation>/<repository name>/<image name>:commit-${{ github.sha }}
         run: |
           envsubst < k8s.yaml > _k8s.yaml
           
