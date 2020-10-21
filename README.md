@@ -585,4 +585,3 @@ async fn main() -> std::io::Result<()> {
 
 ### Postgres
 
-https://github.com/zalando/postgres-operator/blob/master/docs/quickstart.md#deployment-options
