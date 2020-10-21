@@ -16,6 +16,7 @@ Content:
     - [github packages](#github-packages)
 - [Development](#development)
     - [rust](#rust)
+    - [postgres](#postgres)
 
 ## Pre requirements
 
@@ -502,6 +503,8 @@ next Dockerfile
 ```dockerfile
 FROM rust:1.46 AS builder
 
+ARG RUST_TARGET=aarch64-unknown-linux-gnu
+
 WORKDIR /usr/src/PROJECT
 
 RUN cargo install cargo-watch systemfd
@@ -516,10 +519,10 @@ COPY Cargo.lock .
 COPY Cargo.toml .
 COPY .cargo .cargo
 
-RUN cargo build --target aarch64-unknown-linux-gnu --release
+RUN cargo build --target $RUST_TARGET --release
 
 ADD . .
-RUN cargo build --target aarch64-unknown-linux-gnu --release
+RUN cargo build --target $RUST_TARGET --release
 
 FROM arm64v8/debian:buster-slim
 COPY --from=builder \
@@ -542,6 +545,8 @@ services:
     build:
       context: .
       target: builder
+      args:
+        - RUST_TARGET=x86_64-unknown-linux-gnu
     volumes:
       - ./:/usr/src/readme
 ```
@@ -577,3 +582,7 @@ async fn main() -> std::io::Result<()> {
     server.run().await
 }
 ```
+
+### Postgres
+
+https://github.com/zalando/postgres-operator/blob/master/docs/quickstart.md#deployment-options
