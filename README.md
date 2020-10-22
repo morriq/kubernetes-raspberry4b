@@ -32,6 +32,8 @@ Content:
     
     https://github.com/ljfranklin/k8s-pi#hardware
     
+    Follow "prepare raspberry pi" in installation's description below
+    
     https://github.com/kubernetes-sigs/kubespray/blob/master/docs/nodes.md?fbclid=IwAR1bk5Vde4mL0j2bMeT91kHOIzk_UPJCnYSBtst1MmDsaw5Dd2_yPjN7XxA#addingreplacing-a-worker-node
 
 ### Software
