@@ -6,6 +6,7 @@ Https home cluster based on kubespray with github actions deployment.
 Content:
 - [Pre requirements](#pre-requirements)
     - [Hardware](#hardware)
+        - [Extending cluster](#extending-cluster)
     - [Software](#software)
     - [Domain](#domain)
     - [Network](#network)
@@ -26,6 +27,10 @@ Content:
 - SD Card. I used 32gb with installed ubuntu 20.04 64bit (https://www.raspberrypi.org/blog/raspberry-pi-imager-imaging-utility/)
 - Cooler. I used [this one](https://www.amazon.com/Raspberry-Model-Aluminum-Cooling-Metal/dp/B07VQLBSNC)
 - Ethernet connection
+
+    #### Extending cluster
+    
+    https://github.com/ljfranklin/k8s-pi#hardware
 
 ### Software
 
