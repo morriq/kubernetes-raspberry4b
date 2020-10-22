@@ -93,6 +93,10 @@ cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory
 sudo apt-get update -y && sudo apt-get --with-new-pkgs upgrade -y
 sudo apt install python3-pip git -y
 
+sudo nano /etc/apt/apt.conf.d/50unattended-upgrades
+>>>> Unattended-Upgrade::Automatic-Reboot "true";
+and all what you need
+
 #### --------------------------------------------------------
 
 git clone https://github.com/kubernetes-sigs/kubespray.git
