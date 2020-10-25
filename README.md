@@ -244,8 +244,45 @@ on:
     branches: [ master ]
 
 jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: username
+          password: "${{ secrets.GHCR_TOKEN }}"
+          registry: ghcr.io
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: react
+          file: react/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: |
+            ghcr.io/ORGANISATION/repository/image:commit-${{ github.sha }}
+            ghcr.io/ORGANISATION/repository/image:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
+          
   deploy:
     runs-on: ubuntu-latest
+    needs: publish
 
     steps:
     - uses: actions/checkout@v2
@@ -461,7 +498,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: username
+          password: '${{ secrets.GHCR_TOKEN }}'
+          registry: ghcr.io
 
       - name: Build and push
         uses: docker/build-push-action@v2
