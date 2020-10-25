@@ -216,7 +216,7 @@ rules:
   resources: ["deployments"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 - apiGroups: [""] # "" indicates the core API group
-  resources: ["services", "pods"]
+  resources: ["services", "pods", "configmaps", "persistentvolumes", "persistentvolumeclaims"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
 ---
 kind: ClusterRoleBinding
