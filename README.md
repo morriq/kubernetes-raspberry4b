@@ -463,13 +463,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: whoan/docker-build-with-cache-action@v5
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        timeout-minutes: 300
         with:
-          image_tag: latest,commit-${{ github.sha }}
-          username: USERNAME
-          password: '${{ secrets.GHCR_TOKEN }}'
-          registry: ghcr.io
-          image_name: ORGANISATION/REPOSITORY/IMAGE NAME
+          context: FOLDER
+          file: FOLDER/Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: |
+            ghcr.io/ORGANISATION/REPOSITORY/IMAGE:commit-${{ github.sha }}
+            ghcr.io/ORGANISATION/REPOSITORY/IMAGE:latest
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache,mode=max
 
   deploy:
     runs-on: ubuntu-latest
