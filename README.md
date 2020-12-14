@@ -15,6 +15,7 @@ Content:
     - [https](#https)
     - [github actions deployment](#github-actions-deployment)
     - [github packages](#github-packages)
+    - [safety](#safety)
 - [Development](#development)
     - [rust](#rust)
     - [postgres](#postgres)
@@ -559,6 +560,14 @@ jobs:
           manifests: |
             _k8s.yaml
 ```
+
+### safety
+
+https://www.stackrox.com/wiki/securing-the-kubernetes-api-server/
+
+https://stackoverflow.com/questions/50352621/where-is-kube-apiserver-located
+
+https://github.com/freach/kubernetes-security-best-practice/blob/master/README.md
 
 ## Development
 
