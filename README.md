@@ -94,7 +94,7 @@ network:
     version: 2
 
 vim /boot/firmware/cmdline.txt
-cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory
+append: >>> cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory
 sudo apt-get update -y && sudo apt-get --with-new-pkgs upgrade -y
 sudo apt install python3-pip git -y
 
