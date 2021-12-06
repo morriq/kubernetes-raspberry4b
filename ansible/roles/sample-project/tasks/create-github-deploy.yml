@@ -1,0 +1,11 @@
+---
+- name: Ensures /home/ubuntu/project/.github dir exists
+  file: path=/home/ubuntu/project/.github state=directory
+
+- name: Ensures /home/ubuntu/project/.github/workflows dir exists
+  file: path=/home/ubuntu/project/.github/workflows state=directory
+
+- name: Use template to create .github//workflows/deploy.yaml
+  template:
+    src: ./templates/deploy.j2
+    dest: /home/ubuntu/project/.github//workflows/deploy.yaml

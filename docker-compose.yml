@@ -1,0 +1,13 @@
+version: '3.4'
+services:
+  ansible:
+    build:
+      context: .
+    tty: true
+    stdin_open: true
+    ports:
+      - 22:22
+    volumes:
+      - ./ansible:/home/ubuntu/ansible
+      - ./project:/home/ubuntu/project
+      - ./UBUNTU20-CIS:/home/ubuntu/UBUNTU20-CIS

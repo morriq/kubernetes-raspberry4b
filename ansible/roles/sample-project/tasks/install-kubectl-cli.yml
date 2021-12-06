@@ -1,0 +1,38 @@
+---
+- name: Ensures /home/ubuntu/kubectl dir exists
+  file: path=/home/ubuntu/kubectl state=directory
+
+- name: set stable kubectl version
+  get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/stable.txt
+    dest: /home/ubuntu/kubectl/stable.txt
+    mode: '0440'
+
+- name: Download last stable kubectl version
+  vars:
+    version: "{{ lookup('file', '/home/ubuntu/kubectl/stable.txt') }}"
+  get_url:
+    url: https://dl.k8s.io/release/{{version}}/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: '+x'
+
+- name: connect to cluster and get kubeconfig
+  command: cat /etc/rancher/k3s/k3s.yaml
+  register: command_output
+  delegate_to: "{{groups['k8s_cluster'][0]}}"
+  become: true
+
+- name: Ensures /.kube dir exists
+  file: path=/.kube state=directory
+
+- name: Save kubeconfig to /.kube/config
+  copy:
+    content: '{{ command_output.stdout }}'
+    dest: /.kube/config
+
+- name: Save kubeconfig to /.kube/config
+  replace:
+    path: /.kube/config
+    regexp: https:\/\/127.0.0.1:6443
+    replace: "https://{{hostvars[groups['k8s_cluster'][0]].ansible_host}}:6443"
+    backup: yes

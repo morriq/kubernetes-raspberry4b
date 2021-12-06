@@ -1,0 +1,2 @@
+---
+static_charts_directory: /var/lib/rancher/k3s/server/static/charts

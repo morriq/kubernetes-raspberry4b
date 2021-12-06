@@ -1,0 +1,14 @@
+---
+- name: Find my public ip
+  uri:
+    url: http://ifconfig.me/ip
+    return_content: yes
+  register: host_ip
+
+- name: Ensures /home/ubuntu/project dir exists
+  file: path=/home/ubuntu/project state=directory
+
+- name: Use template to create k8s.yaml
+  template:
+    src: ./templates/k8s.j2
+    dest: /home/ubuntu/project/k8s.yaml

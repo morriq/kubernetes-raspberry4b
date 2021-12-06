@@ -1,0 +1,4 @@
+---
+unattended_mail_only_on_error: true
+unattended_automatic_reboot_time: '02:00'
+k3s_become_for_all: true

@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{sample_app_name}}-deployment
+  namespace: {{sample_app_name}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{sample_app_name}}
+  template:
+    metadata:
+      labels:
+        app: {{sample_app_name}}
+    spec:
+      imagePullSecrets:
+        - name: ghcr
+      containers:
+        - name: {{sample_app_name}}
+          image: ${DOCKER_IMAGE}
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{sample_app_name}}-service
+  namespace: {{sample_app_name}}
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      name: tcp
+  selector:
+    app: {{sample_app_name}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{sample_app_name}}-ingress
+  namespace: {{sample_app_name}}
+  annotations:
+    external-dns.alpha.kubernetes.io/target: '{{host_ip.content}}'
+    external-dns.alpha.kubernetes.io/hostname: '{{sample_app_domain}},www.{{sample_app_domain}}'
+spec:
+  rules:
+    - host: {{sample_app_domain}}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{sample_app_name}}-service
+                port:
+                  number: 80
