@@ -1,0 +1,15 @@
+s3_bucket: xxx
+s3_access_key: xxx
+s3_secret_key: xxx
+unattended_mail: xxx
+amazon_sm_access_key: xxx
+amazon_sm_secret_key: xxx
+ghcr_username: xxx
+ghcr_password: xxx
+ghcr_email: xxx
+k3s_docker_registry: 192.168.x.x
+# roles/sample-project:
+github_repository_name: example.com
+sample_app_name: example-com
+sample_app_domain: example.com
+github_organisation: example-organisation
