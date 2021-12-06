@@ -1,0 +1,39 @@
+k3s_cluster:
+  hosts:
+    node1:
+      ansible_host: 192.168.x.x
+      ansible_connection: ssh
+      ansible_user: xxx
+      ansible_ssh_pass: xxx
+      ansible_become_pass: xxx
+      ansible_ssh_port: xxx
+      k3s_control_node: true
+
+    node2:
+      ansible_host: 192.168.x.x
+      ansible_connection: ssh
+      ansible_user: xxx
+      ansible_ssh_pass: xxx
+      ansible_become_pass: xxx
+      ansible_ssh_port: xxx
+
+gh-agents:
+  hosts:
+    node3:
+      ansible_host: 192.168.x.x
+      ansible_connection: ssh
+      ansible_user: xxx
+      ansible_ssh_pass: xxx
+      ansible_become_pass: xxx
+      ansible_ssh_port: xxx
+      github_runner_token: xxx
+      github_runner_name: xxx
+
+docker-registry:
+  hosts:
+    node3:
+
+fan:
+  hosts:
+    node1:
+    node2:
