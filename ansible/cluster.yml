@@ -1,0 +1,34 @@
+---
+- name: install dependencies
+  hosts: localhost
+  tasks:
+    - name: Install roles from Ansible Galaxy
+      command: ansible-galaxy install -r {{ item }}
+      with_items:
+        - roles/common/meta/requirements.yml
+        - roles/k8s-manifests/meta/requirements.yml
+
+- name: apply common configuration
+  hosts: all
+  become: true
+  vars_files:
+    - 'vault/main.yml'
+  roles:
+    - common
+
+- name: apply kubernetes manifests
+  hosts: k3s_cluster[0]
+  become: true
+  vars_files:
+    - 'vault/main.yml'
+  environment:
+    K8S_AUTH_KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  roles:
+    - k8s-manifests
+
+- name: create sample project
+  hosts: localhost
+  vars_files:
+    - 'vault/main.yml'
+  roles:
+    - sample-project

@@ -1,0 +1,5 @@
+---
+- name: modify command by replacing yaml file
+  ansible.builtin.copy:
+    dest: /home/ubuntu/project/Dockerfile
+    src: '{{role_path}}/files/Dockerfile'

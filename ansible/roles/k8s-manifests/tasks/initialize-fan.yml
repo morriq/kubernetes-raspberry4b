@@ -1,0 +1,71 @@
+---
+- name: add label to node
+  ignore_errors: yes
+  shell: kubectl label node {{ item }} fan-connected=true
+  with_items: "{{ groups['fan'] }}"
+
+- name: create namespace
+  when: "inventory_hostname in groups['fan']"
+  kubernetes.core.k8s:
+    apply: yes
+    definition:
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: hardware-tools
+
+- name: create deployment
+  when: "inventory_hostname in groups['fan']"
+  kubernetes.core.k8s:
+    apply: yes
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: fan-deployment
+        namespace: hardware-tools
+      spec:
+        replicas: 2
+        selector:
+          matchLabels:
+            app: fan
+        template:
+          metadata:
+            labels:
+              app: fan
+          spec:
+            containers:
+              - name: fan-driver
+                image: pilotak/rpi-fan
+                env:
+                  - name: DESIRED_TEMP
+                    value: '45'
+                  - name: FAN_PIN
+                    value: '17'
+                  - name: FAN_PWM_MIN
+                    value: '25'
+                  - name: FAN_PWM_MAX
+                    value: '100'
+                  - name: FAN_PWM_FREQ
+                    value: '25'
+                  - name: P_TEMP
+                    value: '15'
+                  - name: I_TEMP
+                    value: '0.4'
+                ports:
+                  - containerPort: 80
+                imagePullPolicy: Always
+                securityContext:
+                  privileged: true
+            nodeSelector:
+              fan-connected: 'true'
+            affinity:
+              podAntiAffinity:
+                requiredDuringSchedulingIgnoredDuringExecution:
+                  - labelSelector:
+                      matchExpressions:
+                        - key: 'app'
+                          operator: In
+                          values:
+                            - fan
+                    topologyKey: 'kubernetes.io/hostname'

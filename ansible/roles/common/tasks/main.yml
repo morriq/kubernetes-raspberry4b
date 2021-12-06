@@ -1,0 +1,180 @@
+---
+- name: Update and upgrade apt packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: Install packages
+  apt:
+    pkg:
+      - bsd-mailx
+      - ufw
+
+# solving: issues on 6443, on network connection in pods' worker, metric scrapping issues
+- name: enable ufw
+  command: ufw enable
+
+# https://devtidbits.com/2019/07/31/ufw-service-not-loading-after-a-reboot/
+- name: add to ansible hosts file
+  ansible.builtin.lineinfile:
+    path: '/lib/systemd/system/ufw.service'
+    insertafter: 'Before=network.target'
+    line: 'After=netfilter-persistent.service'
+
+- name: ufw default allow outgoing
+  command: ufw default allow outgoing
+
+- name: ufw default allow incoming
+  command: ufw default allow incoming
+
+- name: ufw default allow routed
+  command: ufw default allow routed
+
+- name: Set unattended upgrades
+  include_role:
+    name: jnv.unattended-upgrades
+
+- name: Set valid options in /boot/firmware/cmdline.txt to run kubernetes
+  register: cmdline
+  replace:
+    path: /boot/firmware/cmdline.txt
+    regexp: '^([\w](?!.*\b{{ item }}\b).*)$'
+    replace: '\1 {{ item }}'
+  with_items:
+    - 'cgroup_enable=cpuset'
+    - 'cgroup_memory=1'
+    - 'cgroup_enable=memory'
+
+- name: Check if reboot required
+  stat:
+    path: /var/run/reboot-required
+  register: reboot_required_file
+
+- name: Reboot
+  when: cmdline.changed or reboot_required_file.stat.exists == true
+  reboot:
+    reboot_timeout: 3600
+- name: install k3s
+  when: "'k3s_cluster' in group_names"
+  block:
+    - name: Ensure hostname is set
+      hostname:
+        name: '{{ inventory_hostname }}'
+    - name: Install k3s
+      include_role:
+        name: xanmanning.k3s
+      vars:
+        k3s_become_for_all: true
+        k3s_etcd_datastore: yes
+        # If you want to use 2 members or an even number of members, please set k3s_use_unsupported_config to true
+        k3s_use_unsupported_config: yes
+        k3s_release_version: v1.21.5+k3s2
+        k3s_registries:
+          mirrors:
+            docker.io:
+              endpoint:
+                - 'http://{{k3s_docker_registry}}:5000'
+        k3s_server:
+          etcd-snapshot-schedule-cron: '0 */6 * * *'
+          etcd-s3-region: 'eu-central-1'
+          etcd-s3-bucket: '{{s3_bucket}}'
+          etcd-s3-access-key: '{{s3_access_key}}'
+          etcd-s3-secret-key: '{{s3_secret_key}}'
+          etcd-s3: yes
+          tls-san: '{{ansible_host}}'
+          disable:
+            - traefik
+# # https://stackoverflow.com/questions/57821778/install-docker-on-ubuntu-using-ansible-with-python3
+- name: install docker and setup registry
+  when: "'docker-registry' in group_names"
+  block:
+    - name: create docker group
+      become: true
+      group:
+        name: docker
+        state: present
+
+    - name: add user to group
+      become: true
+      user:
+        name: '{{ansible_user}}'
+        groups: docker
+        append: true
+
+    - name: install packages required by docker
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gpg-agent
+          - software-properties-common
+
+    - name: add docker GPG key
+      become: true
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: add docker apt repo
+      become: true
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: install docker
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+    - name: setup registry
+      ignore_errors: yes
+      command: docker run -d -p 5000:5000 --restart=always --name registry registry:2
+
+- name: setup github agent
+  when: "'gh-agents' in group_names"
+  block:
+    - name: Creates directory
+      become: no
+      file:
+        path: /home/ubuntu/actions-runner
+        state: directory
+
+    - name: Download actions scripts
+      become: no
+      get_url:
+        url: https://github.com/actions/runner/releases/download/v2.284.0/actions-runner-linux-arm64-2.284.0.tar.gz
+        dest: /home/ubuntu/actions-runner
+
+    - name: Extract actions script
+      become: no
+      ansible.builtin.unarchive:
+        remote_src: yes
+        src: /home/ubuntu/actions-runner/actions-runner-linux-arm64-2.284.0.tar.gz
+        dest: /home/ubuntu/actions-runner
+
+    - name: Install runner
+      ignore_errors: yes
+      become: no
+      command: ./config.sh --url https://github.com/{{github_organisation}} --token {{github_runner_token}} --runnergroup Default --name {{github_runner_name}} --labelrs arm64 --work _work
+      args:
+        chdir: /home/ubuntu/actions-runner/
+
+    - name: Install runner as service
+      command: ./svc.sh install
+      args:
+        chdir: /home/ubuntu/actions-runner/
+
+    - name: Start runner as service
+      command: ./svc.sh start
+      args:
+        chdir: /home/ubuntu/actions-runner/

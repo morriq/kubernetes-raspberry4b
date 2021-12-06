@@ -1,0 +1,31 @@
+---
+- name: git clone prometheus
+  ansible.builtin.git:
+    repo: https://github.com/prometheus-operator/kube-prometheus.git
+    dest: '{{static_charts_directory}}/kube-prometheus'
+    version: release-0.8
+
+- name: Register ymls in manifests/setup
+  find:
+    paths: '{{static_charts_directory}}/kube-prometheus/manifests/setup'
+  register: setup
+
+- debug: var=item.path
+  with_items: '{{ setup.files }}'
+
+- name: Apply all manifests in manifests/setup
+  with_items: '{{setup.files}}'
+  kubernetes.core.k8s:
+    apply: yes
+    src: '{{item.path}}'
+
+- name: Register ymls in manifests
+  find:
+    paths: '{{static_charts_directory}}/kube-prometheus/manifests'
+  register: manifests
+
+- name: Apply all manifests in manifests
+  with_items: '{{manifests.files}}'
+  kubernetes.core.k8s:
+    apply: yes
+    src: '{{item.path}}'

@@ -1,0 +1,5 @@
+---
+- name: modify command by replacing yaml file
+  ansible.builtin.copy:
+    dest: /var/lib/rancher/k3s/server/manifests/metrics-server/metrics-server-deployment.yaml
+    src: '{{role_path}}/files/metrics-server-deployment.yml'

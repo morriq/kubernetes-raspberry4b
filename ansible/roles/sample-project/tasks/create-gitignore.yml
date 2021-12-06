@@ -1,0 +1,5 @@
+---
+- name: Creating a .gitignore
+  copy:
+    dest: /home/ubuntu/project/.gitignore
+    content: kubeconfig.yaml
