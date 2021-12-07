@@ -19,7 +19,7 @@
 - name: connect to cluster and get kubeconfig
   command: cat /etc/rancher/k3s/k3s.yaml
   register: command_output
-  delegate_to: "{{groups['k8s_cluster'][0]}}"
+  delegate_to: "{{groups['k3s_cluster'][0]}}"
   become: true
 
 - name: Ensures /.kube dir exists
@@ -34,5 +34,5 @@
   replace:
     path: /.kube/config
     regexp: https:\/\/127.0.0.1:6443
-    replace: "https://{{hostvars[groups['k8s_cluster'][0]].ansible_host}}:6443"
+    replace: "https://{{hostvars[groups['k3s_cluster'][0]].ansible_host}}:6443"
     backup: yes
