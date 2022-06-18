@@ -6,13 +6,26 @@
 
 - Raspberry servers with ubuntu 20.04 64bit version (I used three: 1x master, 1x worker, 1x github agent)
 
-- Ansible if Ubuntu CIS is not mounted in docker-compose
-
 ## Usage
 
 ### Hardening
 
 I used https://github.com/ansible-lockdown/UBUNTU20-CIS but feel free to use another.
+To use it, in root of this repository:
+
+```sh
+git clone https://github.com/ansible-lockdown/UBUNTU20-CIS.git && cd UBUNTU20-CIS
+echo "- 192.168.x.x" > ./inventory.yml
+```
+
+For more complex inventory see file ./ansible/inventory-k3s.yml
+
+```sh
+docker-compose up -d && docker-compose exec ansible bash
+cd ../UBUNTU20-CIS
+ansible-playbook -i {{ path to the inventory of servers you want to use }} {{ relative path to site.yml }}
+```
+
 Mentioned repo operates on `grub` and on raspberry it might fail in these steps, because `grub` it's not accessible.
 I just set these steps on false:
 
