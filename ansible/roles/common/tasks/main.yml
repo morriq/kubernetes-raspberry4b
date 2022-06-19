@@ -35,6 +35,62 @@
   include_role:
     name: jnv.unattended-upgrades
 
+- name: Clone zram project
+  ansible.builtin.git:
+    repo: 'https://github.com/StuartIanNaylor/zram-swap-config'
+    dest: /home/ubuntu/zram-swap-config
+
+- name: Changing perm of "/home/ubuntu/zram-swap-config/install.sh", adding "+x"
+  file: dest=/home/ubuntu/zram-swap-config/install.sh mode=a+x
+
+- name: Install zram
+  command: sh ./install.sh
+  args:
+    chdir: /home/ubuntu/zram-swap-config
+
+- name: Set COMP_ALG to lz4
+  ansible.builtin.lineinfile:
+    path: /etc/zram-swap-config.conf
+    regexp: '^COMP_ALG='
+    line: COMP_ALG=lz4
+
+- name: Clone log2ram
+  ansible.builtin.git:
+    repo: 'https://github.com/azlux/log2ram'
+    dest: /home/ubuntu/log2ram
+
+- name: Changing perm of "/home/ubuntu/log2ram/install.sh", adding "+x"
+  file: dest=/home/ubuntu/log2ram/install.sh mode=a+x
+
+- name: Install log2ram
+  command: sh ./install.sh
+  args:
+    chdir: /home/ubuntu/log2ram
+
+- name: Set ZL2R to true
+  ansible.builtin.lineinfile:
+    path: /etc/log2ram.conf
+    regexp: '^ZL2R='
+    line: ZL2R=true
+
+- name: Set COMP_ALG to true
+  ansible.builtin.lineinfile:
+    path: /etc/log2ram.conf
+    regexp: '^COMP_ALG='
+    line: COMP_ALG=lz4
+
+- name: Set SIZE to true
+  ansible.builtin.lineinfile:
+    path: /etc/log2ram.conf
+    regexp: '^SIZE='
+    line: SIZE=100M
+
+- name: Set LOG_DISK_SIZE to true
+  ansible.builtin.lineinfile:
+    path: /etc/log2ram.conf
+    regexp: '^LOG_DISK_SIZE='
+    line: LOG_DISK_SIZE=400M
+
 - name: Set valid options in /boot/firmware/cmdline.txt to run kubernetes
   register: cmdline
   replace:
@@ -65,7 +121,7 @@
       include_role:
         name: xanmanning.k3s
       vars:
-        k3s_become_for_all: true
+        k3s_become: true
         k3s_etcd_datastore: yes
         # If you want to use 2 members or an even number of members, please set k3s_use_unsupported_config to true
         k3s_use_unsupported_config: yes
