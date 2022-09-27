@@ -30,7 +30,13 @@
 
 - name: ufw default allow routed
   command: ufw default allow routed
+  
+- name: ufw allow 80
+  command: ufw allow 80
 
+- name: ufw allow 443
+  command: ufw allow 443
+  
 - name: Set unattended upgrades
   include_role:
     name: jnv.unattended-upgrades
