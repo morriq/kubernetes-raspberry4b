@@ -1,7 +1,7 @@
 ---
 - include: install-kubectl-cli.yml
-- include: create-k8s.yml
 - include: create-github-deploy.yml
 - include: create-secrets.yml
+- include: create-k8s.yml
 - include: create-gitignore.yml
 - include: create-kubeconfig.yml
