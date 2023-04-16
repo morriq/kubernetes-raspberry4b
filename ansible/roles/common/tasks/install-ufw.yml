@@ -1,0 +1,19 @@
+---
+- name: Install packages
+  apt:
+    pkg:
+      - ufw
+
+# solving: issues on 6443, on network connection in pods' worker, metric scrapping issues
+- name: enable ufw
+  command: ufw enable
+
+# https://devtidbits.com/2019/07/31/ufw-service-not-loading-after-a-reboot/
+- name: add to ansible hosts file
+  ansible.builtin.lineinfile:
+    path: '/lib/systemd/system/ufw.service'
+    insertafter: 'Before=network.target'
+    line: 'After=netfilter-persistent.service'
+
+- name: ufw default allow incoming
+  command: ufw default allow incoming

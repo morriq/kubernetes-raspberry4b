@@ -1,0 +1,31 @@
+---
+- name: install k3s
+  when: "'k3s_cluster' in group_names"
+  block:
+    - name: Ensure hostname is set
+      hostname:
+        name: '{{ inventory_hostname }}'
+    - name: Install k3s
+      include_role:
+        name: xanmanning.k3s
+      vars:
+        k3s_become: true
+        k3s_etcd_datastore: yes
+        # If you want to use 2 members or an even number of members, please set k3s_use_unsupported_config to true
+        k3s_use_unsupported_config: yes
+        k3s_release_version: v1.21.5+k3s2
+        k3s_registries:
+          mirrors:
+            docker.io:
+              endpoint:
+                - 'http://{{k3s_docker_registry}}:5000'
+        k3s_server:
+          etcd-snapshot-schedule-cron: '0 */6 * * *'
+          etcd-s3-region: 'eu-central-1'
+          etcd-s3-bucket: '{{s3_bucket}}'
+          etcd-s3-access-key: '{{s3_access_key}}'
+          etcd-s3-secret-key: '{{s3_secret_key}}'
+          etcd-s3: yes
+          tls-san: '{{ansible_host}}'
+          disable:
+            - traefik

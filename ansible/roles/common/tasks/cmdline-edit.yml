@@ -1,0 +1,11 @@
+---
+- name: Set valid options in /boot/firmware/cmdline.txt to run kubernetes
+  register: cmdline
+  replace:
+    path: /boot/firmware/cmdline.txt
+    regexp: '^([\w](?!.*\b{{ item }}\b).*)$'
+    replace: '\1 {{ item }}'
+  with_items:
+    - 'cgroup_enable=cpuset'
+    - 'cgroup_memory=1'
+    - 'cgroup_enable=memory'

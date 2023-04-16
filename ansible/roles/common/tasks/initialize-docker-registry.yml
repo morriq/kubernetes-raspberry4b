@@ -1,0 +1,55 @@
+---
+# # https://stackoverflow.com/questions/57821778/install-docker-on-ubuntu-using-ansible-with-python3
+- name: install docker and setup registry
+  when: "'docker-registry' in group_names"
+  block:
+    - name: create docker group
+      become: true
+      group:
+        name: docker
+        state: present
+
+    - name: add user to group
+      become: true
+      user:
+        name: '{{ansible_user}}'
+        groups: docker
+        append: true
+
+    - name: install packages required by docker
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gpg-agent
+          - software-properties-common
+
+    - name: add docker GPG key
+      become: true
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: add docker apt repo
+      become: true
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+
+    - name: install docker
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+
+    - name: setup registry
+      ignore_errors: yes
+      command: docker run -d -p 5000:5000 --restart=always --name registry registry:2
