@@ -22,21 +22,9 @@
     insertafter: 'Before=network.target'
     line: 'After=netfilter-persistent.service'
 
-- name: ufw default allow outgoing
-  command: ufw default allow outgoing
-
 - name: ufw default allow incoming
   command: ufw default allow incoming
 
-- name: ufw default allow routed
-  command: ufw default allow routed
-  
-- name: ufw allow 80
-  command: ufw allow 80
-
-- name: ufw allow 443
-  command: ufw allow 443
-  
 - name: Set unattended upgrades
   include_role:
     name: jnv.unattended-upgrades

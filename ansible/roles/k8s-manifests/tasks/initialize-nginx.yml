@@ -19,6 +19,8 @@
         chart: https://%{KUBERNETES_API}%/static/charts/ingress-nginx-4.1.4.tgz
         set:
           rbac.create: 'true'
+          # this line below is required in cloudflare tunnel in configmap
+          controller.service.type: ClusterIP
           controller.service.enableHttps: 'true'
           controller.metrics.enabled: 'true'
           controller.publishService.enabled: 'true'

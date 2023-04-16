@@ -13,5 +13,4 @@
 - include: initialize-nginx.yml
 - include: initialize-metrics-server.yml
 - include: initialize-prometheus.yml
-- include: initialize-auto-updates.yml
 - include: initialize-fan.yml
