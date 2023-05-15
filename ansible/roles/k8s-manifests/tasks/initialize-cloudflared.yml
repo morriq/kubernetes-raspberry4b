@@ -1,0 +1,116 @@
+---
+- name: create cloudflared directory
+  file:
+    path: /usr/share/keyrings
+    state: directory
+    mode: '0755'
+  become: yes
+
+- name: download cloudflared key
+  get_url:
+    url: https://pkg.cloudflare.com/cloudflare-main.gpg
+    dest: /usr/share/keyrings/cloudflare-main.gpg
+    mode: '0755'
+  become: yes
+
+- name: add cloudflared repository
+  apt_repository:
+    filename: cloudflared
+    repo: 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared focal main'
+    state: present
+  become: yes
+
+- name: install cloudflared
+  apt:
+    name: cloudflared
+    state: present
+  become: yes
+
+- name: Is cloudflared logged in
+  stat:
+    path: /home/ubuntu/.cloudflared/cert.pem
+  register: register_name
+
+- name: You need to login to cloudflare manually. Run "cloudflared login" as UBUNTU user on the machine.
+  meta: end_play
+  when: not register_name.stat.exists
+
+- name: create tunnel
+  shell: cloudflared tunnel create {{ansible_hostname}} | grep -oP 'Created tunnel.*\K\b[[:xdigit:]]{8}(?:-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}\b'
+  register: cf
+
+- name: create k8s secret from tunnel
+  shell: kubectl create secret generic tunnel-credentials --from-file=credentials.json=/root/.cloudflared/{{ cf.stdout }}.json
+
+- name: add label to node
+  shell: kubectl label node {{ansible_hostname}} cloudflare=true
+
+- name: create cloudflared deployment
+  kubernetes.core.k8s:
+    apply: yes
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: cloudflared
+      spec:
+        selector:
+          matchLabels:
+            app: cloudflared
+        replicas: 2 # You could also consider elastic scaling for this deployment
+        template:
+          metadata:
+            labels:
+              app: cloudflared
+          spec:
+            nodeSelector:
+              cloudflare: 'true'
+            containers:
+              - name: cloudflared
+                image: cloudflare/cloudflared:latest
+                args:
+                  - tunnel
+                  - --config
+                  - /etc/cloudflared/config/config.yaml
+                  - run
+                livenessProbe:
+                  httpGet:
+                    path: /ready
+                    port: 2000
+                  failureThreshold: 1
+                  initialDelaySeconds: 10
+                  periodSeconds: 10
+                volumeMounts:
+                  - name: config
+                    mountPath: /etc/cloudflared/config
+                    readOnly: true
+                  - name: creds
+                    mountPath: /etc/cloudflared/creds
+                    readOnly: true
+            volumes:
+              - name: creds
+                secret:
+                  secretName: tunnel-credentials
+              - name: config
+                configMap:
+                  name: cloudflared
+                  items:
+                    - key: config.yaml
+                      path: config.yaml
+
+- name: create cloudflared config
+  kubernetes.core.k8s:
+    apply: yes
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: cloudflared
+      data:
+        config.yaml: |
+          tunnel: production
+          credentials-file: /etc/cloudflared/creds/credentials.json
+          metrics: 0.0.0.0:2000
+          no-autoupdate: true
+          ingress:
+          - service: http://nginx-ingress-ingress-nginx-controller.kube-system.svc.cluster.local

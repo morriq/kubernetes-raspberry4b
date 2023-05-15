@@ -5,7 +5,6 @@
   with_items: "{{ groups['fan'] }}"
 
 - name: create namespace
-  when: "inventory_hostname in groups['fan']"
   kubernetes.core.k8s:
     apply: yes
     definition:
@@ -15,7 +14,6 @@
         name: hardware-tools
 
 - name: create deployment
-  when: "inventory_hostname in groups['fan']"
   kubernetes.core.k8s:
     apply: yes
     definition:

@@ -14,3 +14,4 @@
 - include: initialize-metrics-server.yml
 - include: initialize-prometheus.yml
 - include: initialize-fan.yml
+- include: initialize-cloudflared.yml

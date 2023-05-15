@@ -41,7 +41,7 @@ metadata:
   name: {{sample_app_name}}-ingress
   namespace: {{sample_app_name}}
   annotations:
-    external-dns.alpha.kubernetes.io/target: '{{host_ip.content}}'
+    external-dns.alpha.kubernetes.io/target: '${TUNNEL_ADDRESS}' # its address {tunnelid}.cfargotunnel.com
     external-dns.alpha.kubernetes.io/hostname: '{{sample_app_domain}},www.{{sample_app_domain}}'
 spec:
   ingressClassName: nginx

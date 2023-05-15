@@ -1,10 +1,4 @@
 ---
-- name: Find my public ip
-  uri:
-    url: http://ifconfig.me/ip
-    return_content: yes
-  register: host_ip
-
 - name: Ensures /home/ubuntu/project dir exists
   file: path=/home/ubuntu/project state=directory
 

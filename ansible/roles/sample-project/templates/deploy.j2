@@ -55,6 +55,7 @@ jobs:
       - name: Resolve environment variables in k8s.yaml
         env:
           DOCKER_IMAGE: ghcr.io/{{github_organisation}}/{{github_repository_name}}/web:commit-${{ '{{' }} github.sha {{ '}}' }}
+          TUNNEL_ADDRESS: ${{ '{{' }} secrets.TUNNEL_ADDRESS {{ '}}' }}
         run: |
           envsubst < k8s.yaml > _k8s.yaml
 
