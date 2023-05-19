@@ -10,4 +10,4 @@ services:
     volumes:
       - ./ansible:/home/ubuntu/ansible
       - ./project:/home/ubuntu/project
-      - ./UBUNTU20-CIS:/home/ubuntu/UBUNTU20-CIS
+      - ./UBUNTU22-CIS:/home/ubuntu/UBUNTU22-CIS

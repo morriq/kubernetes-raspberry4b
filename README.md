@@ -10,11 +10,11 @@
 
 ### Hardening
 
-I used https://github.com/ansible-lockdown/UBUNTU20-CIS but feel free to use another.
+I used https://github.com/ansible-lockdown/UBUNTU22-CIS but feel free to use another.
 To use it, in root of this repository:
 
 ```sh
-git clone https://github.com/ansible-lockdown/UBUNTU20-CIS.git && cd UBUNTU20-CIS
+git clone https://github.com/ansible-lockdown/UBUNTU22-CIS.git && cd UBUNTU22-CIS
 echo "- 192.168.x.x" > ./inventory.yml
 ```
 
@@ -22,20 +22,32 @@ For more complex inventory see file ./ansible/inventory-k3s.yml
 
 ```sh
 docker-compose up -d && docker-compose exec ansible bash
-cd ../UBUNTU20-CIS
-ansible-playbook -i {{ path to the inventory of servers you want to use }} {{ relative path to site.yml }}
+cd ../UBUNTU22-CIS
+ansible-playbook -i ./inventory.yml ./site.yml
 ```
 
 Mentioned repo operates on `grub` and on raspberry it might fail in these steps, because `grub` it's not accessible.
 I just set these steps on false:
 
 ```yaml
-ubtu20cis_rule_1_1_1_6: false
-ubtu20cis_rule_1_4_1: false
-ubtu20cis_rule_1_6_1_2: false
-ubtu20cis_rule_3_1_1: false
-ubtu20cis_rule_4_1_1_3: false
-ubtu20cis_rule_4_1_1_4: false
+ubtu22cis_rule_1_6_1_2: false
+ubtu22cis_rule_3_1_1: false
+ubtu22cis_rule_4_1_1_3: false
+ubtu22cis_rule_4_1_1_4: false
+
+# https://github.com/ansible-lockdown/UBUNTU22-CIS/issues/13:
+ubtu22cis_rule_5_4_1: false
+ubtu22cis_rule_5_4_2: false
+ubtu22cis_rule_5_4_3: false
+ubtu22cis_rule_5_4_4: false
+ubtu22cis_rule_5_4_5: false
+
+# changing passwords policy and disabling accounts when not used:
+ubtu22cis_rule_5_5_1_1: false
+ubtu22cis_rule_5_5_1_2: false
+ubtu22cis_rule_5_5_1_3: false
+ubtu22cis_rule_5_5_1_4: false
+ubtu22cis_rule_5_5_1_5: false
 ```
 
 ### Installation
@@ -52,7 +64,7 @@ docker-compose exec ansible bash
 ansible-playbook -i inventory-k3s.yml cluster.yml
 ```
 
-It will fail due to executing commands without waiting on installing some helm charts. **Run it again**. In futhure I should address it in playbooks.
+It will fail due to executing commands without waiting on installing some helm charts. **Run it again**. In future I should address it in playbooks.
 
 ### Elasticsearch policies
 
