@@ -2,3 +2,5 @@ ansible/vault/main.yml
 project
 ansible/inventory-k3s.yml
 todos.md
+
+.DS_Store

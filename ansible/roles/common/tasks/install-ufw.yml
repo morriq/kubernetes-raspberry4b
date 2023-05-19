@@ -17,3 +17,7 @@
 
 - name: ufw default allow incoming
   command: ufw default allow incoming
+
+# access to docker registry
+- name: ufw default allow outgoing
+  command: ufw default allow outgoing
