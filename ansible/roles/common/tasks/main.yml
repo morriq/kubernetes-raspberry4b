@@ -1,7 +1,6 @@
 ---
 - include: update-host.yml
 - include: install-ufw.yml
-- include: unattended-upgrades.yml
 - include: install-log2ram.yml
 - include: cmdline-edit.yml
 - include: reboot-if-required.yml
