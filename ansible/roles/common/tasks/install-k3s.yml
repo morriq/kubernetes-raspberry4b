@@ -1,4 +1,9 @@
 ---
+- name: Install packages
+  apt:
+    pkg:
+      - linux-modules-extra-raspi
+
 - name: install k3s
   when: "'k3s_cluster' in group_names"
   block:
@@ -13,7 +18,7 @@
         k3s_etcd_datastore: yes
         # If you want to use 2 members or an even number of members, please set k3s_use_unsupported_config to true
         k3s_use_unsupported_config: yes
-        k3s_release_version: v1.21.5+k3s2
+        k3s_release_version: v1.27.1+k3s1
         k3s_registries:
           mirrors:
             docker.io:

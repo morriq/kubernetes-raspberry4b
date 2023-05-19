@@ -5,8 +5,8 @@
       - ufw
 
 # solving: issues on 6443, on network connection in pods' worker, metric scrapping issues
-- name: enable ufw
-  command: ufw enable
+ - name: enable ufw
+   command: yes | ufw enable
 
 # https://devtidbits.com/2019/07/31/ufw-service-not-loading-after-a-reboot/
 - name: add to ansible hosts file
