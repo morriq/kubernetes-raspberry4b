@@ -51,17 +51,24 @@
   kubernetes.core.k8s:
     apply: yes
     definition:
-      apiVersion: 'kubernetes-client.io/v1'
+      apiVersion: external-secrets.io/v1beta1
       kind: ExternalSecret
       metadata:
         name: cloudflare-secret
         namespace: default
       spec:
-        backendType: secretsManager
+        refreshInterval: 48h
+        secretStoreRef:
+          name: secretstore-sample
+          kind: SecretStore
+        target:
+          name: cloudflare-secret
+          creationPolicy: Owner
         data:
-          - key: home-cluster
-            property: CLOUDFLARE_API_TOKEN
-            name: CF_API_TOKEN
+          - secretKey: CF_API_TOKEN
+            remoteRef:
+              key: home-cluster
+              property: CLOUDFLARE_API_TOKEN
 
 - name: create deployment external-dns
   kubernetes.core.k8s:
@@ -86,10 +93,11 @@
             serviceAccountName: external-dns
             containers:
               - name: external-dns
-                image: k8s.gcr.io/external-dns/external-dns:v0.7.6
+                image: k8s.gcr.io/external-dns/external-dns:v0.13.4
                 args:
                   - --source=ingress # service is also possible
                   - --provider=cloudflare
+                  - --domain-filter=koduj-beta.it
                   - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
                 envFrom:
                   - secretRef:
