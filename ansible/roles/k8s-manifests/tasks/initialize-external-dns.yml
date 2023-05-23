@@ -97,7 +97,7 @@
                 args:
                   - --source=ingress # service is also possible
                   - --provider=cloudflare
-                  - --domain-filter=koduj-beta.it
+                  # - --domain-filter=domain.com,next.com
                   - --cloudflare-proxied # (optional) enable the proxy feature of Cloudflare (DDOS protection, CDN...)
                 envFrom:
                   - secretRef:
