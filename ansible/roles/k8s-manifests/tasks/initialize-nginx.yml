@@ -1,7 +1,7 @@
 ---
 - name: download nginx chart
   get_url:
-    url: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.1.4/ingress-nginx-4.1.4.tgz
+    url: https://github.com/kubernetes/ingress-nginx/releases/download/helm-chart-4.6.1/ingress-nginx-4.6.1.tgz
     dest: '{{static_charts_directory}}'
 
 - name: apply chart
@@ -16,7 +16,7 @@
         namespace: kube-system
       spec:
         targetNamespace: kube-system
-        chart: https://%{KUBERNETES_API}%/static/charts/ingress-nginx-4.1.4.tgz
+        chart: https://%{KUBERNETES_API}%/static/charts/ingress-nginx-4.6.1.tgz
         set:
           rbac.create: 'true'
           # this line below is required in cloudflare tunnel in configmap

@@ -3,7 +3,7 @@
   ansible.builtin.git:
     repo: https://github.com/prometheus-operator/kube-prometheus.git
     dest: '{{static_charts_directory}}/kube-prometheus'
-    version: release-0.8
+    version: release-0.12
 
 - name: Register ymls in manifests/setup
   find:
@@ -17,6 +17,8 @@
   with_items: '{{setup.files}}'
   kubernetes.core.k8s:
     apply: yes
+    server_side_apply:
+      field_manager: ansible
     src: '{{item.path}}'
 
 - name: Register ymls in manifests
@@ -28,4 +30,6 @@
   with_items: '{{manifests.files}}'
   kubernetes.core.k8s:
     apply: yes
+    server_side_apply:
+      field_manager: ansible
     src: '{{item.path}}'

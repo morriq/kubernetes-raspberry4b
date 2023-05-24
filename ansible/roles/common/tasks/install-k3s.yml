@@ -18,13 +18,17 @@
         k3s_etcd_datastore: yes
         # If you want to use 2 members or an even number of members, please set k3s_use_unsupported_config to true
         k3s_use_unsupported_config: yes
-        k3s_release_version: v1.27.1+k3s1
+        k3s_release_version: v1.25.9+k3s1
         k3s_registries:
           mirrors:
             docker.io:
               endpoint:
                 - 'http://{{k3s_docker_registry}}:5000'
         k3s_server:
+          # this changes in kubelet are required by prometheus operator https://github.com/prometheus-operator/kube-prometheus#prerequisites
+          kubelet-arg:
+            - 'authentication-token-webhook=true'
+            - 'authorization-mode=Webhook'
           etcd-snapshot-schedule-cron: '0 */6 * * *'
           etcd-s3-region: 'eu-central-1'
           etcd-s3-bucket: '{{s3_bucket}}'
