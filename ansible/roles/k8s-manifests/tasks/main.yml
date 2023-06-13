@@ -7,7 +7,7 @@
 - name: Install pip packages
   pip:
     name:
-      - kubernetes
+      - kubernetes==25.3.0
 - include: initialize-aws-secrets.yml
 - include: initialize-external-dns.yml
 - include: initialize-nginx.yml

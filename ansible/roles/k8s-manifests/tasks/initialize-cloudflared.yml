@@ -28,7 +28,7 @@
 
 - name: Is cloudflared logged in
   stat:
-    path: /home/ubuntu/.cloudflared/cert.pem
+    path: /root/.cloudflared/cert.pem
   register: register_name
 
 - name: You need to login to cloudflare manually. Run "cloudflared login" as UBUNTU user on the machine.
@@ -53,6 +53,7 @@
       kind: Deployment
       metadata:
         name: cloudflared
+        namespace: default
       spec:
         selector:
           matchLabels:
@@ -106,6 +107,7 @@
       kind: ConfigMap
       metadata:
         name: cloudflared
+        namespace: default
       data:
         config.yaml: |
           tunnel: production
