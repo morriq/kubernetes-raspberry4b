@@ -6,12 +6,12 @@
 
 - name: Download crds.yaml
   get_url:
-    url: https://download.elastic.co/downloads/eck/1.8.0/crds.yaml
+    url: https://download.elastic.co/downloads/eck/2.8.0/crds.yaml
     dest: '{{static_charts_directory}}/eck/crds.yml'
 
 - name: Download operator.yaml
   get_url:
-    url: https://download.elastic.co/downloads/eck/1.8.0/operator.yaml
+    url: https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
     dest: '{{static_charts_directory}}/eck/operator.yml'
 
 - name: Apply manifests
@@ -32,7 +32,7 @@
         name: quickstart
         namespace: default
       spec:
-        version: 7.15.2
+        version: 8.8.2
         nodeSets:
           - name: default
             count: 1
@@ -42,6 +42,7 @@
                   - name: sysctl
                     securityContext:
                       privileged: true
+                      runAsUser: 0
                     command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
 
 - name: initialize kibana
@@ -54,7 +55,7 @@
         name: quickstart
         namespace: default
       spec:
-        version: 7.15.2
+        version: 8.8.2
         count: 1
         elasticsearchRef:
           name: quickstart
@@ -70,7 +71,7 @@
         namespace: default
       spec:
         type: filebeat
-        version: 7.15.2
+        version: 8.8.2
         elasticsearchRef:
           name: quickstart
         config:
