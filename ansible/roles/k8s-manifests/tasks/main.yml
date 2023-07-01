@@ -8,11 +8,11 @@
   pip:
     name:
       - kubernetes==25.3.0
-# - include: initialize-aws-secrets.yml
-# - include: initialize-external-dns.yml
-# - include: initialize-nginx.yml
+- include: initialize-aws-secrets.yml
+- include: initialize-external-dns.yml
+- include: initialize-nginx.yml
 - include: initialize-elk.yml
-# - include: initialize-metrics-server.yml
-# - include: initialize-prometheus.yml
-# - include: initialize-fan.yml
-# - include: initialize-cloudflared.yml
+- include: initialize-metrics-server.yml
+- include: initialize-prometheus.yml
+- include: initialize-fan.yml
+- include: initialize-cloudflared.yml
