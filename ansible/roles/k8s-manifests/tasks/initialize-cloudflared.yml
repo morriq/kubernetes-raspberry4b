@@ -39,6 +39,9 @@
   shell: cloudflared tunnel create {{ansible_hostname}} | grep -oP 'Created tunnel.*\K\b[[:xdigit:]]{8}(?:-[[:xdigit:]]{4}){3}-[[:xdigit:]]{12}\b'
   register: cf
 
+- name: create k8s secret from tunnel (delete if exists)
+  shell: kubectl delete secret tunnel-credentials --ignore-not-found
+
 - name: create k8s secret from tunnel
   shell: kubectl create secret generic tunnel-credentials --from-file=credentials.json=/root/.cloudflared/{{ cf.stdout }}.json
 
