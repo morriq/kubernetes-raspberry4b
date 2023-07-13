@@ -11,7 +11,8 @@
 - include: initialize-aws-secrets.yml
 - include: initialize-external-dns.yml
 - include: initialize-nginx.yml
-- include: initialize-elk.yml
+# https://github.com/morriq/kubernetes-raspberry4b/issues/17
+# - include: initialize-elk.yml
 - include: initialize-metrics-server.yml
 - include: initialize-prometheus.yml
 - include: initialize-fan.yml
