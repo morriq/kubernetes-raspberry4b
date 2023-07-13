@@ -4,7 +4,7 @@
 
 - Docker
 
-- Raspberry servers with ubuntu 20.04 64bit version (I used three: 1x master, 1x worker, 1x github agent)
+- Raspberry servers with ubuntu 22.04 64bit version (I used three: 1x master, 1x github agent)
 
 ## Usage
 
