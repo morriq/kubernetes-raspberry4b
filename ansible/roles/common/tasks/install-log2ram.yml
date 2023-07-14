@@ -54,3 +54,7 @@
     path: /etc/log2ram.conf
     regexp: '^LOG_DISK_SIZE='
     line: LOG_DISK_SIZE=400M
+
+# log2ram suggests to make reboot after installing it:
+- name: Unconditionally reboot the machine with all defaults
+  ansible.builtin.reboot:

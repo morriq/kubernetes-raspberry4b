@@ -68,7 +68,7 @@
           - secretKey: CF_API_TOKEN
             remoteRef:
               key: home-cluster
-              property: CLOUDFLARE_API_TOKEN
+              property: {{amazon_sm_secret_key}}
 
 - name: create deployment external-dns
   kubernetes.core.k8s:
