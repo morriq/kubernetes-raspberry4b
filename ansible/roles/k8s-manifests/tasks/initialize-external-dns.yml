@@ -95,6 +95,7 @@
               - name: external-dns
                 image: k8s.gcr.io/external-dns/external-dns:v0.13.4
                 args:
+                  - --log-level=warning
                   - --source=ingress # service is also possible
                   - --provider=cloudflare
                   # - --domain-filter=domain.com,next.com
