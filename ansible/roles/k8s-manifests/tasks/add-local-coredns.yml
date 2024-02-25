@@ -1,0 +1,24 @@
+---
+- name: get nginx controller ip
+  shell: kubectl get svc -n kube-system nginx-ingress-ingress-nginx-controller -o jsonpath='{.spec.clusterIP}'
+  register: nginx_controller_ip
+
+- name: create coredns-custom config
+  kubernetes.core.k8s:
+    apply: yes
+    definition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: coredns-custom
+        namespace: kube-system
+      data:
+        {{ansible_hostname}}-local.server: |
+          {{ansible_hostname}}.local:53 {
+            errors
+            template IN ANY {{ansible_hostname}}.local {
+              answer "{{ .Name }} 60 IN A {{nginx_controller_ip.stdout}}"
+              fallthrough
+            }
+            forward . /etc/resolv.conf
+          }
