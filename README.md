@@ -81,3 +81,14 @@ password: kubectl get secret quickstart-es-elastic-user -o go-template='{{.data.
 ```
 
 Follow https://www.cloudsavvyit.com/7152/how-to-rotate-and-delete-old-elasticsearch-records-after-a-month/ to set remove policies.
+
+## Components
+
+k3s 1.25.9
+pip kubernetes 25.3.0
+https://github.com/prometheus-operator/kube-prometheus.git 0.12.0
+ingress nginx 4.7.0
+rancher/mirrored-metrics-server 0.6.2
+external-dns 0.13.4
+cloudflared 2024.2.1
+external-secrets 0.8.2

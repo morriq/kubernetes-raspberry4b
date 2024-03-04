@@ -8,7 +8,6 @@
   pip:
     name:
       - kubernetes==25.3.0
-- include: add-local-coredns.yml
 - include: initialize-aws-secrets.yml
 - include: initialize-external-dns.yml
 - include: initialize-nginx.yml
@@ -18,3 +17,6 @@
 - include: initialize-prometheus.yml
 - include: initialize-fan.yml
 - include: initialize-cloudflared.yml
+# not configured, not used even once:
+# - include: falco.yml
+- include: add-local-coredns.yml
