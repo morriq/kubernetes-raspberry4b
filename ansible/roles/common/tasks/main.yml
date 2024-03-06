@@ -1,9 +1,8 @@
 ---
-- include: update-host.yml
-- include: install-ufw.yml
-- include: install-log2ram.yml
-- include: cmdline-edit.yml
-- include: reboot-if-required.yml
-- include: install-k3s.yml
-- include: initialize-docker-registry.yml
-- include: initialize-github-agent.yml
+- include_tasks: update-host.yml
+- include_tasks: install-ufw.yml
+- include_tasks: install-log2ram.yml
+- include_tasks: cmdline-edit.yml
+- include_tasks: install-k3s.yml
+- include_tasks: initialize-docker-registry.yml
+- include_tasks: initialize-github-agent.yml
