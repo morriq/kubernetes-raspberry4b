@@ -1,11 +1,10 @@
-FROM ubuntu:22.04
+FROM python:3.10-slim-buster
 
-ENV DEBIAN_FRONTEND=noninteractive 
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update
-RUN apt install -y software-properties-common && \
-    add-apt-repository --yes --update ppa:ansible/ansible && \
-    apt install -y ansible python3 python3-pip yamllint sshpass git && \
-    pip3 install "ansible-lint[yamllint]"
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git sshpass openssh-client && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install ansible ansible-lint[yamllint]
 
 WORKDIR /home/ubuntu/ansible
