@@ -8,9 +8,9 @@
   pip:
     name:
       - kubernetes==25.3.0
-- include: install-kubectl-cli.yml
-- include: create-github-deploy.yml
-- include: create-secrets.yml
-- include: create-k8s.yml
-- include: create-gitignore.yml
-- include: create-kubeconfig.yml
+- include_tasks: install-kubectl-cli.yml
+- include_tasks: create-github-deploy.yml
+- include_tasks: create-secrets.yml
+- include_tasks: create-k8s.yml
+- include_tasks: create-gitignore.yml
+- include_tasks: create-kubeconfig.yml

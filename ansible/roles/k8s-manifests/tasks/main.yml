@@ -8,15 +8,16 @@
   pip:
     name:
       - kubernetes==25.3.0
-- include: initialize-aws-secrets.yml
-- include: initialize-external-dns.yml
-- include: initialize-nginx.yml
+- include_tasks: add-local-coredns.yml
+- include_tasks: initialize-aws-secrets.yml
+- include_tasks: initialize-external-dns.yml
+- include_tasks: initialize-nginx.yml
 # https://github.com/morriq/kubernetes-raspberry4b/issues/17
-# - include: initialize-elk.yml
-- include: initialize-metrics-server.yml
-- include: initialize-prometheus.yml
-- include: initialize-fan.yml
-- include: initialize-cloudflared.yml
+# - include_tasks: initialize-elk.yml
+- include_tasks: initialize-metrics-server.yml
+- include_tasks: initialize-prometheus.yml
+- include_tasks: initialize-fan.yml
+- include_tasks: initialize-cloudflared.yml
 # not configured, not used even once:
-# - include: falco.yml
-- include: add-local-coredns.yml
+# - include_tasks: falco.yml
+- include_tasks: add-local-coredns.yml
