@@ -1,0 +1,53 @@
+---
+- name: setup github agent
+  when: "'gh-agents' in group_names"
+  block:
+
+  - name: create namespace arc-systems
+    kubernetes.core.k8s:
+      apply: yes
+      definition:
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: arc-systems
+
+  - name: apply gha-runner-scale-set-controller
+    kubernetes.core.k8s:
+      apply: yes
+      wait: yes
+      definition:
+        apiVersion: helm.cattle.io/v1
+        kind: HelmChart
+        metadata:
+          name: arc
+          namespace: kube-system
+        spec:
+          targetNamespace: arc-systems
+          chart: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set-controller
+
+  - name: create namespace arc-runners
+    kubernetes.core.k8s:
+      apply: yes
+      definition:
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: arc-runners
+
+  - name: apply gha-runner-scale-set
+    kubernetes.core.k8s:
+      apply: yes
+      wait: yes
+      definition:
+        apiVersion: helm.cattle.io/v1
+        kind: HelmChart
+        metadata:
+          name: arc-runner-set
+          namespace: kube-system
+        spec:
+          targetNamespace: arc-runners
+          chart: oci://ghcr.io/actions/actions-runner-controller-charts/gha-runner-scale-set
+          set:
+            githubConfigUrl: "https://github.com/{{github_organisation}}"
+            githubConfigSecret.github_token: "{{gh_agent_password}}"

@@ -5,4 +5,3 @@
 - include_tasks: cmdline-edit.yml
 - include_tasks: install-k3s.yml
 - include_tasks: initialize-docker-registry.yml
-- include_tasks: initialize-github-agent.yml

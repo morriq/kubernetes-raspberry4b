@@ -42,7 +42,7 @@
                 emptyDir: {}
             containers:
               - name: metrics-server
-                image: rancher/mirrored-metrics-server:v0.6.2
+                image: rancher/mirrored-metrics-server:v0.7.0
                 args:
                   - --cert-dir=/tmp
                   - --secure-port=10250

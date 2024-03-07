@@ -7,7 +7,7 @@
 - name: Install pip packages
   pip:
     name:
-      - kubernetes==25.3.0
+      - kubernetes==29.0.0
 - include_tasks: install-kubectl-cli.yml
 - include_tasks: create-github-deploy.yml
 - include_tasks: create-secrets.yml

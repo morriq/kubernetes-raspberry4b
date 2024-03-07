@@ -3,7 +3,7 @@
   ansible.builtin.git:
     repo: https://github.com/prometheus-operator/kube-prometheus.git
     dest: '{{static_charts_directory}}/kube-prometheus'
-    version: release-0.12
+    version: release-0.13
 
 - name: Register ymls in manifests/setup
   find:

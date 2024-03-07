@@ -85,11 +85,11 @@ Follow https://www.cloudsavvyit.com/7152/how-to-rotate-and-delete-old-elasticsea
 
 ## Components
 
-k3s 1.25.9 -> 1.28.7
-pip kubernetes 25.3.0 -> 29.0.0
-https://github.com/prometheus-operator/kube-prometheus.git 0.12.0 -> 0.13.0
-ingress nginx 4.7.0 -> 4.10.0
-rancher/mirrored-metrics-server 0.6.2 -> 0.7.0
-external-dns 0.13.4 -> 0.14.0
-cloudflared ??? -> 2024.2.1
-external-secrets 0.8.2 -> 0.9.13
+k3s 1.28.7
+pip kubernetes 29.0.0
+https://github.com/prometheus-operator/kube-prometheus.git 0.13.0
+ingress nginx 4.10.0
+rancher/mirrored-metrics-server 0.7.0
+external-dns 0.14.0
+cloudflared 2024.2.1
+external-secrets ???

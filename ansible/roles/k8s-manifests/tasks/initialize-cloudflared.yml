@@ -71,7 +71,7 @@
               cloudflare: 'true'
             containers:
               - name: cloudflared
-                image: cloudflare/cloudflared:latest
+                image: cloudflare/cloudflared:2024.2.1
                 args:
                   - tunnel
                   - --config
