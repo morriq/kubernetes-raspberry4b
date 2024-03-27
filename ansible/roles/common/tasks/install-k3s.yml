@@ -30,7 +30,7 @@
           kubelet-arg:
             - 'authentication-token-webhook=true'
             - 'authorization-mode=Webhook'
-          etcd-snapshot-schedule-cron: '0 */6 * * *'
+          etcd-snapshot-schedule-cron: '0 */24 * * *'
           etcd-s3-region: 'eu-central-1'
           etcd-s3-bucket: '{{s3_bucket}}'
           etcd-s3-access-key: '{{s3_access_key}}'

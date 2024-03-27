@@ -23,7 +23,7 @@
         name: fan-deployment
         namespace: hardware-tools
       spec:
-        replicas: 2
+        replicas: 1
         selector:
           matchLabels:
             app: fan
