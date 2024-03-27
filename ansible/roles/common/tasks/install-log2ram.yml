@@ -31,29 +31,62 @@
   args:
     chdir: /home/ubuntu/log2ram
 
-- name: Set ZL2R to true
+- name: log2ram:ZL2R=true
   ansible.builtin.lineinfile:
     path: /etc/log2ram.conf
     regexp: '^ZL2R='
     line: ZL2R=true
 
-- name: Set COMP_ALG to true
+- name: log2ram:COMP_ALG=lz4
   ansible.builtin.lineinfile:
     path: /etc/log2ram.conf
     regexp: '^COMP_ALG='
     line: COMP_ALG=lz4
 
-- name: Set SIZE to true
+- name: log2ram:SIZE=500M
   ansible.builtin.lineinfile:
     path: /etc/log2ram.conf
     regexp: '^SIZE='
-    line: SIZE=100M
+    line: SIZE=500M
 
-- name: Set LOG_DISK_SIZE to true
+- name: log2ram:USE_RSYNC=true
+  ansible.builtin.lineinfile:
+    path: /etc/log2ram.conf
+    regexp: '^#USE_RSYNC='
+    line: USE_RSYNC=true
+
+- name: log2ram:LOG_DISK_SIZE=500M
   ansible.builtin.lineinfile:
     path: /etc/log2ram.conf
     regexp: '^LOG_DISK_SIZE='
-    line: LOG_DISK_SIZE=400M
+    line: LOG_DISK_SIZE=500M
+
+- name: journald:Compress=yes
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#Compress='
+    line: Compress=yes
+
+- name: journald:Compress=yes
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: '^#SystemMaxUse='
+    line: SystemMaxUse=80M
+
+- name: auditd:max_log_file_action=rotate
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^max_log_file_action'
+    line: max_log_file_action = rotate
+
+- name: auditd:space_left_action=rotate
+  ansible.builtin.lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^space_left_action'
+    line: space_left_action = rotate
+
+- name: allow ufw in on cni0 from (lot of warns without it)
+  shell: ufw allow in on cni0 from 10.42.0.0/16
 
 # log2ram suggests to make reboot after installing it:
 - name: Unconditionally reboot the machine with all defaults
